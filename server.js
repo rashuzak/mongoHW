@@ -16,7 +16,7 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraper_news";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/scraper_news";
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 var db = mongoose.connection;

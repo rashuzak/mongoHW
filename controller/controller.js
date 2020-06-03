@@ -13,15 +13,16 @@ router.get("/", function (req, res) {
 });
     
 router.get("/scrape", function (req, res) {
-    request("http://www.nytimes.com", function(error, response, html) {
+    request("https://www.nytimes.com", function(error, response, html) {
         const $ = cheerio.load(html);
         const titlesArray = [];
 
-        $(".c-entry-box--compact__title").each(function(i, element){
+        $("a h2").each(function(i, element){
             var result = {};
 
-            result.title = $(this).children("a").text();
-            result.title = $(this).children("a").attr("href");
+            result.title = $(element).text();
+            result.link = $(element).closest("a").attr("href");
+            
 
             if (result.title !== "" && result.link !== "") {
                 if (titlesArray.indexOf(result.title) == -1){
@@ -54,10 +55,10 @@ router.get("/scrape", function (req, res) {
           
  });
 router.get("/articles", function (req, res) {
-    Article.find().sort({_id: -1}).exec(function(err, doc){
+    Article.find({}).lean().exec(function(err, doc){
         if (err) {
             console.log(err);
-        } else {
+        } else { console.log("doc", doc);
             var artc1 = { article: doc};
             res.render("index", artc1);
         }
